@@ -3,8 +3,8 @@
 
 import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
 import 'package:dartastic_opentelemetry/testing.dart';
-import 'package:otel_supabase/otel_supabase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:otel_supabase/otel_supabase.dart';
 
 void main() {
   late TestHarness harness;
