@@ -5,6 +5,14 @@ analyzer:
     lines_longer_than_80_chars: ignore
     comment_references: ignore
     constant_identifier_names: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:
