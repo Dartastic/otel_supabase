@@ -1,14 +1,14 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the MIT License.
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_supabase_suppression.dart';
 import 'supabase_semantics.dart';
 
 const _tracerName = 'dartastic_otel_libs_supabase';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 /// Wraps a Supabase Auth (GoTrue) call in a CLIENT span.
 ///
@@ -42,7 +42,7 @@ Future<T> tracedSupabaseAuth<T>({
   final span = _tracer().startSpan(
     'supabase.auth $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap({
+    attributes: OTelAPI.attributesFromMap({
       SupabaseBridgeSemantics.authOperation.key: operation,
       if (provider != null) SupabaseBridgeSemantics.authProvider.key: provider,
       if (email != null) User.userEmail.key: email,
@@ -79,7 +79,7 @@ Future<T> tracedSupabaseDb<T>({
   final span = _tracer().startSpan(
     'supabase.db $operation $table',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap({
+    attributes: OTelAPI.attributesFromMap({
       'db.system': 'postgresql',
       'db.operation': operation,
       'db.namespace': 'public',
@@ -123,7 +123,7 @@ Future<T> tracedSupabaseStorage<T>({
   final span = _tracer().startSpan(
     'supabase.storage $operation $bucket',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap({
+    attributes: OTelAPI.attributesFromMap({
       SupabaseBridgeSemantics.storageBucket.key: bucket,
       SupabaseBridgeSemantics.storageOperation.key: operation,
       if (path != null) SupabaseBridgeSemantics.storagePath.key: path,
@@ -159,7 +159,7 @@ Future<T> tracedSupabaseFunction<T>({
   final span = _tracer().startSpan(
     'supabase.function $functionName',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap({
+    attributes: OTelAPI.attributesFromMap({
       SupabaseBridgeSemantics.functionName.key: functionName,
     }),
   );
@@ -173,11 +173,11 @@ Future<T> tracedSupabaseFunction<T>({
   }
 }
 
-void _markError(Span span, Object e, StackTrace st) {
+void _markError(APISpan span, Object e, StackTrace st) {
   span.addAttributes(
-    OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]),
